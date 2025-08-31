@@ -28,19 +28,28 @@ class LanguageController extends Controller
 }
 
     public function edit(string $id)
-    {
-        return view("languages.edit");
+    {    
+    $languages=Language::findOrFail($id);
+        return view("languages.edit", compact( 'languages'));
     }
 
     public function update(Request $request, string $id)
     {
+    $languages=Language::findOrFail($id);
+    $validatedData = $request->validate( ['name' => 'required',]);
+                $languages->update( $validatedData);
         return redirect()->route('languages.index');
     }
 
     public function destroy(Language $language)
     {
-
-            return redirect()->route('languages.index')->with('error', "couldn't delete the Language");
+        $result = $language ->delete();
+        if($result){
+            return redirect()->route('languages.index')->with('success', "language was deleted with success");
+        }
+        else {
+            return redirect()->route('languages.index')->with('error', "failed to delete language");
+        }
         }
     }
 

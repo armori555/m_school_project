@@ -33,18 +33,32 @@ class GroupController extends Controller
 
     public function edit(string $id)
     {
-        return view("groups.edit");
+         $groups=Group::findOrFail($id);
+    $languages=Language::all();
+        return view("groups.edit", compact('groups', 'languages'));
     }
 
     public function update(Request $request, string $id)
     {
+        $groups = Group::findOrFail($id);
+
+        $validatedData = $request->validate( ['name' => 'required',
+                                                    'language_id' => 'required',
+                                                    'level' => 'required'
+        ]);
+                $groups->update( $validatedData);
         return redirect()->route('groups.index');
     }
 
     public function destroy(Group $group)
     {
-
-            return redirect()->route('groups.index')->with('error', "couldn't delete the Group");
+                $result = $group ->delete();
+        if($result){
+            return redirect()->route('groups.index')->with('success', "group was deleted with success");
+        }
+        else {
+            return redirect()->route('groups.index')->with('error', "failed to delete group");
+        }
         }
     }
 

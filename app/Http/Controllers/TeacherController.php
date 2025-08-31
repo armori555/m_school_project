@@ -21,12 +21,12 @@ class TeacherController extends Controller
 
     public function store(Request $request)
 {
-        //validation
+
         $validatedData = $request->validate( ['name' => 'required',
                                                     'family_name' => 'required',
                                                     'language_id' => 'required',
         ]);
-        //creation
+
         Teacher::create( $validatedData);
         return redirect()->route('teachers.index')->with('success',"teacher has been created");
 }
@@ -34,18 +34,32 @@ class TeacherController extends Controller
 
     public function edit(string $id)
     {
-        return view("teachers.edit");
+    $teachers=Teacher::findOrFail($id);
+    $languages=Language::all();
+        return view("teachers.edit", compact('teachers', 'languages'));
     }
 
     public function update(Request $request, string $id)
     {
+        $teachers = Teacher::findOrFail($id);
+
+        $validatedData = $request->validate( ['name' => 'required',
+                                                    'family_name' => 'required',
+                                                    'language_id' => 'required',
+        ]);
+                $teachers->update( $validatedData);
         return redirect()->route('teachers.index');
     }
 
     public function destroy(Teacher $teacher)
     {
-
-            return redirect()->route('teachers.index')->with('error', "couldn't delete the Teacher");
+                $result = $teacher ->delete();
+        if($result){
+            return redirect()->route('teachers.index')->with('success', "teacher was deleted with success");
+        }
+        else {
+            return redirect()->route('teachers.index')->with('error', "failed to delete teacher");
+        }
         }
     }
 
