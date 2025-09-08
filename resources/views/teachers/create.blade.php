@@ -1,22 +1,31 @@
 @extends('layouts.app')
 @section('content')
-<div class="creation_container">
+<div class="card shadow p-4">
+    <h2 class="mb-4">Add Teacher</h2>
     <form action="{{ route('teachers.store') }}" method="POST">
         @csrf
-    <label for="name"> name</label>
-    <input type="text" name="name" id="name" required>
 
-        <label for="family_name">family name</label>
-    <input type="text" name="family_name" id="family_name" required>
+        <div class="mb-3">
+            <label for="name" class="form-label">First Name</label>
+            <input type="text" name="name" id="name" class="form-control" required>
+        </div>
 
-          <select name="language_id" >
-        @foreach ($languages as $language)
-        <option value="{{ $language->id }}">{{ $language->name }}</option>
-        @endforeach
-      </select>
+        <div class="mb-3">
+            <label for="family_name" class="form-label">Family Name</label>
+            <input type="text" name="family_name" id="family_name" class="form-control" required>
+        </div>
 
-          <button type="submit">save</button>
-    <a href="{{ route('teachers.index') }}" class="return-button">cancel</a>
+        <div class="mb-3">
+            <label for="language_id" class="form-label">Language</label>
+            <select name="language_id" id="language_id" class="form-select">
+                @foreach ($languages as $language)
+                    <option value="{{ $language->id }}">{{ $language->name }}</option>
+                @endforeach
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Save</button>
+        <a href="{{ route('teachers.index') }}" class="btn btn-secondary">Cancel</a>
     </form>
 </div>
 @endsection

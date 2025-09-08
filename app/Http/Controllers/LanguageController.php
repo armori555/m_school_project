@@ -20,7 +20,8 @@ class LanguageController extends Controller
     public function store(Request $request)
 {
         //validation
-        $validatedData = $request->validate( ['name' => 'required'
+        $validatedData = $request->validate( ['name' => 'required',
+                                                    'price' => 'required'
         ]);
         //creation
         Language::create( $validatedData);
@@ -36,7 +37,7 @@ class LanguageController extends Controller
     public function update(Request $request, string $id)
     {
     $languages=Language::findOrFail($id);
-    $validatedData = $request->validate( ['name' => 'required',]);
+    $validatedData = $request->validate( ['name' => 'required', 'price' => 'required']);
                 $languages->update( $validatedData);
         return redirect()->route('languages.index');
     }

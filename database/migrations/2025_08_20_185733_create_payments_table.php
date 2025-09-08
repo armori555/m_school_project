@@ -14,20 +14,16 @@ return new class extends Migration
         Schema::create('payments', function (Blueprint $table) {
     $table->id();
     $table->unsignedInteger('amount');
-    $table->date('payment_date');
-    $table->unsignedBigInteger('student_id');
-    $table->unsignedBigInteger('group_id');
+    $table->dateTime('payment_date');
+    $table->unsignedBigInteger('studentlanguage_id');
     $table->timestamps();
 
-    $table->foreign('student_id')
+    $table->foreign('studentlanguage_id')
           ->references('id')
-          ->on('students')
+          ->on('studentlanguages')
           ->onDelete('cascade');
 
-    $table->foreign('group_id')
-          ->references('id')
-          ->on('groups')
-          ->onDelete('cascade');
+
 });
     }
 

@@ -31,7 +31,7 @@ class StudentlanguageController extends Controller
         })
         ->orderBy(Student::select('name')->whereColumn('students.id', 'studentlanguages.student_id'),$sort
         )
-        ->paginate(2);
+        ->paginate(10);
 
     $languages = Language::all();
     $groups = Group::all();

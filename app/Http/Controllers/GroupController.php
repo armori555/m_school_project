@@ -9,8 +9,11 @@ class GroupController extends Controller
 {
 
    public function index(Request $request) {
-        $groups=Group::all();
-    return view('groups.index', compact('groups'));
+    $sort = $request->input('sort', 'asc');
+    $groups = Group::with('language')
+                   ->orderBy('language_id', $sort)
+                   ->paginate(8)->appends(request()->query());
+    return view('groups.index', compact('groups','sort'));
 }
 
 

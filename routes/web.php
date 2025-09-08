@@ -4,6 +4,7 @@ use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\StudentlanguageController;
+use App\Http\Controllers\PaymentController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -44,6 +45,7 @@ Route::post('/store', [StudentController::class, "store"])->name("students.store
 Route::get('/edit/{student}', [StudentController::class, "edit"])->name("students.edit");
 Route::put('/{student}', [StudentController::class, "update"])->name("students.update");
 Route::delete('/{student}', [StudentController::class, "destroy"])->name("students.destroy");
+Route::get('show/{student}', [StudentController::class, "show"])->name("students.show");
     });
      Route::prefix('studentlanguages')->group(function(){
 Route::get('/', [StudentlanguageController::class, "index"])->name("studentlanguages.index");
@@ -52,4 +54,14 @@ Route::post('/store', [StudentlanguageController::class, "store"])->name("studen
 Route::get('/edit/{studentlanguage}', [StudentlanguageController::class, "edit"])->name("studentlanguages.edit");
 Route::put('/{studentlanguage}', [StudentlanguageController::class, "update"])->name("studentlanguages.update");
 Route::delete('/{studentlanguage}', [StudentlanguageController::class, "destroy"])->name("studentlanguages.destroy");
+    });
+     Route::prefix('payments')->group(function(){
+Route::get('/', [PaymentController::class, "index"])->name("payments.index");
+Route::get('/create', [PaymentController::class, "create"])->name("payments.create");
+Route::post('/store', [PaymentController::class, "store"])->name("payments.store");
+Route::get('/edit/{payment}', [PaymentController::class, "edit"])->name("payments.edit");
+Route::put('/{payment}', [PaymentController::class, "update"])->name("payments.update");
+Route::delete('/{payment}', [PaymentController::class, "destroy"])->name("payments.destroy");
+Route::get('show/{payment}', [PaymentController::class, "show"])->name("payments.show");
+Route::get('/calculate', [PaymentController::class, "calculate"])->name("payments.calculate");
     });

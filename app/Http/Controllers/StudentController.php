@@ -44,7 +44,7 @@ class StudentController extends Controller
         ->orderBy('name', $sort)       // ✅ sort by student name
         ->orderBy('family_name', $sort) // optional, makes it more natural
         ->with('studentlanguages.language', 'studentlanguages.group')
-        ->paginate(1);
+        ->paginate(10)->appends(request()->query());
 
     $languages = Language::all();
     $groups = Group::all();
@@ -61,39 +61,38 @@ class StudentController extends Controller
 public function store(Request $request)
 {
     $validatedData = $request->validate([
-        'name' => 'required|string|max:255',
+        'name'        => 'required|string|max:255',
         'family_name' => 'required|string|max:255',
-        'birth_date' => 'nullable|date',
-        'adress' => 'nullable|string|max:255',
-        'phone_number' => 'nullable|string|max:20',
-        'email' => 'nullable|email',
-        'image' => 'nullable|string',
-        'groups' => 'required|array',
-        'groups.*' => 'exists:groups,id',
+        'birth_date'  => 'nullable|date',
+        'adress'      => 'nullable|string|max:255',
+        'phone_number'=> 'nullable|string|max:20',
+        'email'       => 'nullable|email',
+        'image'       => 'nullable|string',
+        'groups'      => 'required|array',
+        'groups.*'    => 'nullable|exists:groups,id',
     ]);
 
-    // Student::create with only student fields
     $student = Student::create(array_merge(
-        Arr::except($validatedData, 'groups'),
-        ['paid_amount' => 0, 'unpaid_amount' => 0]
+        Arr::except($validatedData, 'groups')
     ));
 
-    // Prepare bulk rows for studentlanguages
-    $rows = collect($validatedData['groups'])->map(function ($groupId) use ($student) {
-        $languageId = Group::findOrFail($groupId)->language_id;
-        return [
-            'student_id'  => $student->id,
-            'group_id'    => $groupId,
-            'language_id' => $languageId,
-            'created_at'  => now(),
-            'updated_at'  => now(),
-        ];
-    })->all();
+    $rows = collect($validatedData['groups'])
+        ->filter()
+        ->map(function ($groupId, $languageId) use ($student) {
+            return [
+                'student_id'  => $student->id,
+                'group_id'    => $groupId,
+                'language_id' => $languageId,
+                'created_at'  => now(),
+                'updated_at'  => now(),
+            ];
+        })->values()->all();
 
     StudentLanguage::insert($rows);
 
     return redirect()->route('students.index')->with('success', 'Student created successfully!');
 }
+
 
 
 
@@ -128,5 +127,10 @@ public function store(Request $request)
             return redirect()->route('students.index')->with('error', "failed to delete Student");
         }
         }
+            public function show(string $id)
+    {
+        $students = Student::findOrFail($id);
+        return view("students.show", compact('students'));
+    }
     }
 

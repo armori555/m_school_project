@@ -13,9 +13,7 @@ class Student extends Model
         "birth_date",
         "adress",
         "phone_number",
-        "email",
-        "paid_amount",
-        "unpaid_amount"
+        "email"
     ];
         public function studentlanguages() { 
         return $this->hasMany(Studentlanguage::class); 

@@ -21,4 +21,7 @@ class Studentlanguage extends Model
         return $this->belongsTo(Student::class);
     }
     
+    public function payment() { 
+    return $this->hasMany(Payment::class); 
+}
 }

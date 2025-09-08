@@ -20,8 +20,6 @@ return new class extends Migration
             $table->string("adress")->nullable();
             $table->integer("phone_number")->nullable();
             $table->string("email")->nullable();
-            $table->integer("paid_amount")->nullable();
-            $table->integer("unpaid_amount")->nullable();
             $table->timestamps();
         });
     }
